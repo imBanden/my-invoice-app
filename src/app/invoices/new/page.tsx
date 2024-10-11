@@ -3,21 +3,20 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import Form from "next/form";
 
 import { createAction } from "@/app/actions";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useState, startTransition } from "react";
+import SubmitButton from "@/components/SubmitButton";
 
 const page = () => {
   const [state, setState] = useState("ready");
   const handleOnSubmit = async (event: SyntheticEvent) => {
-    event.preventDefault();
-    if (state === "pending") return;
+    if (state === "pending") {
+      event.preventDefault();
+    }
+    return;
     setState("pending");
-    const target = event.target as HTMLFormElement;
-    const formData = new FormData(target);
-    await createAction(formData);
-    console.log("hey");
   };
   return (
     <main className="flex flex-col h-screen gap-6 max-w-5xl mx-auto my-12">
@@ -25,7 +24,7 @@ const page = () => {
         <h1 className="font-semibold text-3xl">Create Invoice</h1>
       </div>
 
-      <form action={createAction} onSubmit={handleOnSubmit}>
+      <Form action={createAction} onSubmit={handleOnSubmit}>
         <div className="grid gap-4 max-w-xs">
           <Label htmlFor="name" className="block font-semibold text-sm">
             Billing Name
@@ -43,9 +42,9 @@ const page = () => {
             Description
           </Label>
           <Textarea id="description" name="description"></Textarea>
-          <Button>Submit</Button>
+          <SubmitButton />
         </div>
-      </form>
+      </Form>
     </main>
   );
 };
